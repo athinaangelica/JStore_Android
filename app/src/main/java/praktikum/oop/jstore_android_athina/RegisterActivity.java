@@ -22,6 +22,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         final EditText nameInput = (EditText) findViewById(R.id.name_input);
+        final EditText usernameInput = (EditText) findViewById(R.id.username_input);
         final EditText emailInput = (EditText) findViewById(R.id.email_input);
         final EditText passwordInput = (EditText) findViewById(R.id.password_input);
         final Button registerButton = (Button) findViewById(R.id.register_button);
@@ -30,6 +31,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 final String name = nameInput.getText().toString();
+                final String username = usernameInput.getText().toString();
                 final String email = emailInput.getText().toString();
                 final String password = passwordInput.getText().toString();
 
@@ -50,7 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 };
 
-                RegisterRequest registerRequest = new RegisterRequest(name, email, password, responseListener);
+                RegisterRequest registerRequest = new RegisterRequest(name, username, email, password, responseListener);
 
                 RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
                 queue.add(registerRequest);

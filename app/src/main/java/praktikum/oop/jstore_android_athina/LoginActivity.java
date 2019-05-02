@@ -62,8 +62,8 @@ public class LoginActivity extends AppCompatActivity
         registerClickable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent loginIntent = new Intent (LoginActivity.this, LoginActivity.class);
-                startActivity(loginIntent);
+                Intent registerIntent = new Intent (LoginActivity.this, RegisterActivity.class);
+                startActivity(registerIntent);
             }
         });
     }
