@@ -70,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
                         );
                     }
 
+                    Toast.makeText(MainActivity.this, listItem.get(1).getName(), Toast.LENGTH_SHORT).show();
+
                     for (int i = 0; i < listSupplier.size(); i++) {
                         childMapping.put(listSupplier.get(i), listItem);
                     }
@@ -79,9 +81,9 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        MenuRequest loginRequest = new MenuRequest(responseListener);
+        MenuRequest menuRequest = new MenuRequest(responseListener);
 
         RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
-        queue.add(loginRequest);
+        queue.add(menuRequest);
     }
 }
