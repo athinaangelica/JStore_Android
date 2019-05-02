@@ -1,10 +1,15 @@
 package praktikum.oop.jstore_android_athina;
 
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        refreshList();
 
         ExpandableListView expandableListView = (ExpandableListView) findViewById(R.id.expandable_list);
 
@@ -66,11 +73,15 @@ public class MainActivity extends AppCompatActivity {
                     for (int i = 0; i < listSupplier.size(); i++) {
                         childMapping.put(listSupplier.get(i), listItem);
                     }
-
                 } catch (JSONException e) {
-
+                    Toast.makeText(MainActivity.this, "Fetch Data Failed!", Toast.LENGTH_SHORT).show();
                 }
             }
         };
+
+        MenuRequest loginRequest = new MenuRequest(responseListener);
+
+        RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+        queue.add(loginRequest);
     }
 }
