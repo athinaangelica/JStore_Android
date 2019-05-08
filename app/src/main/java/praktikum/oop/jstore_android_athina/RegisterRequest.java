@@ -8,12 +8,11 @@ import java.util.Map;
 
 public class RegisterRequest extends StringRequest
 {
-    private static final String Regis_URL = "http://192.168.43.77:8080/newcustomer";
     private Map<String, String> params;
 
-    public RegisterRequest(String name, String username, String email, String password, Response.Listener<String> listener)
+    public RegisterRequest(String name, String username, String email, String password, String ipAddress, Response.Listener<String> listener)
     {
-        super(Method.POST, Regis_URL, listener, null);
+        super(Method.POST, setUrl(ipAddress), listener, null);
         params = new HashMap<>();
         params.put("name", name);
         params.put("username", username);
@@ -25,5 +24,10 @@ public class RegisterRequest extends StringRequest
     public Map<String, String> getParams()
     {
         return params;
+    }
+
+    private static String setUrl(String ipAddress)
+    {
+        return "http://" + ipAddress + ":8080/newcustomer";
     }
 }

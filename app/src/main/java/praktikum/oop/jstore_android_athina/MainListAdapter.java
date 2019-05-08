@@ -29,9 +29,9 @@ public class MainListAdapter extends BaseExpandableListAdapter
     }
 
     @Override
-    public Object getChild(int groupPosition, int childPosititon) {
+    public Object getChild(int groupPosition, int childPosition) {
         return this._listDataChild.get(this._listDataHeader.get(groupPosition))
-                .get(childPosititon).getName();
+                .get(childPosition).getName();
     }
 
     @Override

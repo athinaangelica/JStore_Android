@@ -1,9 +1,12 @@
 package praktikum.oop.jstore_android_athina;
 
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
@@ -15,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -23,18 +27,52 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Supplier> listSupplier = new ArrayList<>();
     private ArrayList<Item> listItem= new ArrayList<>();
     private HashMap<Supplier, ArrayList<Item>> childMapping = new HashMap<>();
+    private int currentUserId;
+
+    ExpandableListView expandableListView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Intent intent = getIntent();
+        currentUserId = intent.getIntExtra("user_id", 0);
+
+        expandableListView = (ExpandableListView) findViewById(R.id.expandable_list);
+
+        Button pesanan = (Button) findViewById(R.id.pesanan);
+
         refreshList();
 
-        ExpandableListView expandableListView = (ExpandableListView) findViewById(R.id.expandable_list);
+        // kalo disini, dia somehow bikin list dulu baru keisi di refreshlist(), jadi dipindah ke dalem refreshlist()
+//
+//        MainListAdapter listAdapter = new MainListAdapter(MainActivity.this, listSupplier, childMapping);
+//        expandableListView.setAdapter(listAdapter);
 
-        MainListAdapter listAdapter = new MainListAdapter(MainActivity.this, listSupplier, childMapping);
-        expandableListView.setAdapter(listAdapter);
+       expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+           @Override
+           public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
+               Item selected = childMapping.get(listSupplier.get(i)).get(i1);
+
+               Intent intent = new Intent(MainActivity.this, BuatPesananActivity.class);
+               intent.putExtra("user_id", currentUserId);
+               intent.putExtra("item", selected);
+               startActivity(intent);
+
+               return true;
+           }
+       });
+
+       pesanan.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               Intent intent = new Intent(MainActivity.this, SelesaiPesananActivity.class);
+               intent.putExtra("user_id", currentUserId);
+               startActivity(intent);
+           }
+       });
     }
 
     protected void refreshList() {
@@ -43,12 +81,14 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 try {
                     JSONArray jsonResponse = new JSONArray(response);
+
                     for (int i = 0; i < jsonResponse.length(); i++) {
                         JSONObject item = jsonResponse.getJSONObject(i);
                         JSONObject supplier = item.getJSONObject("supplier");
                         JSONObject location = supplier.getJSONObject("location");
 
                         Location location1 = new Location(location.getString("city"), location.getString("province"), location.getString("description"));
+                        //Toast.makeText(MainActivity.this, location1.getCity(), Toast.LENGTH_SHORT).show();
 
                         listSupplier.add(new Supplier(
                                 supplier.getInt("id"),
@@ -70,8 +110,6 @@ public class MainActivity extends AppCompatActivity {
                         );
                     }
 
-                    Toast.makeText(MainActivity.this, listItem.get(1).getName(), Toast.LENGTH_SHORT).show();
-
                     for (int i = 0; i < listSupplier.size(); i++) {
                         childMapping.put(listSupplier.get(i), listItem);
                     }
@@ -81,9 +119,17 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        MenuRequest menuRequest = new MenuRequest(responseListener);
+        MenuRequest menuRequest = new MenuRequest(getResources().getString(R.string.ip_address), responseListener);
 
         RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
         queue.add(menuRequest);
+
+//        ExpandableListView expandableListView = (ExpandableListView) findViewById(R.id.expandable_list);
+
+        Toast.makeText(this, "Welcome!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Please wait while retrieving data", Toast.LENGTH_SHORT).show();
+
+        MainListAdapter listAdapter = new MainListAdapter(MainActivity.this, listSupplier, childMapping);
+        expandableListView.setAdapter(listAdapter);
     }
 }

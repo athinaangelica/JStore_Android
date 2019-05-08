@@ -43,6 +43,12 @@ public class LoginActivity extends AppCompatActivity
                             if (jsonResponse != null) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                                 builder.setMessage("Login Success!").create().show();
+
+                                int userId = jsonResponse.getInt("id");
+
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                intent.putExtra("user_id", userId);
+                                startActivity(intent);
                             }
                         }
                         catch (JSONException e) {
@@ -52,7 +58,7 @@ public class LoginActivity extends AppCompatActivity
                     }
                 };
 
-                LoginRequest loginRequest = new LoginRequest(email, password, responseListener);
+                LoginRequest loginRequest = new LoginRequest(email, password, getResources().getString(R.string.ip_address), responseListener);
 
                 RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
                 queue.add(loginRequest);

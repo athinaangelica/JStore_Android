@@ -52,7 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 };
 
-                RegisterRequest registerRequest = new RegisterRequest(name, username, email, password, responseListener);
+                RegisterRequest registerRequest = new RegisterRequest(name, username, email, password, getResources().getString(R.string.ip_address), responseListener);
 
                 RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
                 queue.add(registerRequest);

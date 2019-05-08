@@ -1,19 +1,21 @@
 package praktikum.oop.jstore_android_athina;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class MenuRequest extends StringRequest
+public class PesananSelesaiRequest extends StringRequest
 {
+
     private Map<String, String> params;
 
-    public MenuRequest(String ipAddress, Response.Listener<String> listener)
+    public PesananSelesaiRequest(int invoice_id, String ipAddress, Response.Listener<String> listener)
     {
-        super(Request.Method.GET, setUrl(ipAddress), listener, null);
+        super(Method.POST, setUrl(ipAddress), listener, null);
+        params = new HashMap<>();
+        params.put("id_invoice", ""+invoice_id);
     }
 
     @Override
@@ -24,6 +26,6 @@ public class MenuRequest extends StringRequest
 
     private static String setUrl(String ipAddress)
     {
-        return "http://" + ipAddress + ":8080/items";
+        return "http://" + ipAddress + ":8080/finishtransaction";
     }
 }

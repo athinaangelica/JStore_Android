@@ -1,6 +1,8 @@
 package praktikum.oop.jstore_android_athina;
 
-public class Item
+import java.io.Serializable;
+
+public class Item implements Serializable
 {
     private int id;
     private String name;

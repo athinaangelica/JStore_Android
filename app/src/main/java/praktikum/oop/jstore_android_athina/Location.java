@@ -1,6 +1,8 @@
 package praktikum.oop.jstore_android_athina;
 
-public class Location
+import java.io.Serializable;
+
+public class Location implements Serializable
 {
     private String province;
     private String description;

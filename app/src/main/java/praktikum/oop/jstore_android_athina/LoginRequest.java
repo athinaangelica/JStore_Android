@@ -8,12 +8,11 @@ import java.util.Map;
 
 public class LoginRequest extends StringRequest
 {
-    private static final String Login_URL = "http://192.168.43.77:8080/logincust";
     private Map<String, String> params;
 
-    public LoginRequest(String email, String password, Response.Listener<String> listener)
+    public LoginRequest(String email, String password, String ipAddress, Response.Listener<String> listener)
     {
-        super(Method.POST, Login_URL, listener, null);
+        super(Method.POST, setUrl(ipAddress), listener, null);
         params = new HashMap<>();
         params.put("email", email);
         params.put("password", password);
@@ -23,5 +22,10 @@ public class LoginRequest extends StringRequest
     public Map<String, String> getParams()
     {
         return params;
+    }
+
+    private static String setUrl(String ipAddress)
+    {
+        return "http://" + ipAddress + ":8080/logincust";
     }
 }
