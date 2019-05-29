@@ -99,10 +99,6 @@ public class SelesaiPesananActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 cancelTransaction();
-
-                Intent intent = new Intent(SelesaiPesananActivity.this, MainActivity.class);
-                intent.putExtra("user_id", currentUserId);
-                startActivity(intent);
             }
         });
 
@@ -110,10 +106,6 @@ public class SelesaiPesananActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finishTransaction();
-
-                Intent intent = new Intent(SelesaiPesananActivity.this, MainActivity.class);
-                intent.putExtra("user_id", currentUserId);
-                startActivity(intent);
             }
         });
     }
@@ -124,37 +116,34 @@ public class SelesaiPesananActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 try {
-//                    JSONArray jsonResponse = new JSONArray(response);
-//                    JSONObject invoice = jsonResponse.getJSONObject(0);
-
                     // get JSON objects
 
-                    JSONObject invoice = new JSONObject(response);
+                    JSONArray invoices = new JSONArray(response);
+                    JSONObject invoice = invoices.getJSONObject(0);
 
-                    JSONArray items = invoice.getJSONArray("item");
-                    JSONObject item = items.getJSONObject(0);
+                    int itemId = invoice.getJSONArray("item").getInt(0);
 
                     JSONObject customer = invoice.getJSONObject("customer");
 
                     // get information
                     invoiceId = invoice.getInt("id");
                     customerName = customer.getString("name");
-                    itemName = item.getString("name");
+//                    itemName = listItem.getString("name");
+                    itemName = "" + itemId;
                     orderDate = invoice.getString("date");
                     totalPrice = invoice.getDouble("totalPrice");
-                    invoiceStatus = invoice.getString("INVOICE_STATUS");
-                    invoiceType = invoice.getString("INVOICE_TYPE");
 
-                    if (invoiceStatus.toLowerCase().equals(InvoiceStatus.UNPAID.toString().toLowerCase())) {
+                    invoiceStatus = invoice.getString("invoiceStatus");
+                    invoiceType = invoice.getString("invoiceType");
+
+                    if (invoiceStatus=="UNPAID") {
                         dueDate = invoice.getString("dueDate");
-                    } else if (invoiceStatus.toLowerCase().equals(InvoiceStatus.INSTALLMENT.toString().toLowerCase())) {
+                    } else if (invoiceStatus=="INSTALLMENT") {
                         installmentPeriod =  Integer.parseInt(invoice.getString("installmentPeriod"));
                     }
 
-                    // test
-                    Toast.makeText(SelesaiPesananActivity.this, customerName, Toast.LENGTH_SHORT).show();
-
                     // set visibility
+
                     invoiceIdView.setVisibility(View.VISIBLE);
                     customerNameView.setVisibility(View.VISIBLE);
                     itemNameView.setVisibility(View.VISIBLE);
@@ -162,31 +151,35 @@ public class SelesaiPesananActivity extends AppCompatActivity {
                     totalPriceView.setVisibility(View.VISIBLE);
                     invoiceStatusView.setVisibility(View.VISIBLE);
                     invoiceTypeView.setVisibility(View.VISIBLE);
-                    dueDateTitle.setVisibility(View.VISIBLE);
-                    installmentPeriodTitle.setVisibility(View.VISIBLE);
 
-                    if (invoiceStatus.toLowerCase().equals(InvoiceStatus.UNPAID.toString().toLowerCase())) {
+                    if (invoiceStatus=="UNPAID") {
+                        dueDateTitle.setVisibility(View.VISIBLE);
                         dueDateView.setVisibility(View.VISIBLE);
-                    } else if (invoiceStatus.toLowerCase().equals(InvoiceStatus.INSTALLMENT.toString().toLowerCase())) {
+                        installmentPeriodTitle.setVisibility(View.GONE);
+                        installmentPeriodView.setVisibility(View.GONE);
+                    } else if (invoiceStatus=="INSTALLMENT") {
+                        installmentPeriodTitle.setVisibility(View.VISIBLE);
                         installmentPeriodView.setVisibility(View.VISIBLE);
+                        dueDateTitle.setVisibility(View.GONE);
+                        dueDateView.setVisibility(View.GONE);
                     }
 
                     cancel.setVisibility(View.VISIBLE);
                     finish.setVisibility(View.VISIBLE);
 
                     // set text
-                    invoiceIdView.setText(invoiceId);
+                    invoiceIdView.setText(""+invoiceId);
                     customerNameView.setText(customerName);
-                    itemNameView.setText(itemName);
+                    itemNameView.setText(""+itemName);
                     orderDateView.setText(orderDate);
                     totalPriceView.setText(""+totalPrice);
                     invoiceStatusView.setText(invoiceStatus);
                     invoiceTypeView.setText(invoiceType);
 
-                    if (invoiceStatus.toLowerCase().equals(InvoiceStatus.UNPAID.toString().toLowerCase())) {
+                    if (invoiceStatus=="UNPAID") {
                         dueDateView.setText(dueDate);
-                    } else if (invoiceStatus.toLowerCase().equals(InvoiceStatus.INSTALLMENT.toString().toLowerCase())) {
-                        installmentPeriodView.setText(installmentPeriod);
+                    } else if (invoiceStatus=="INSTALLMENT") {
+                        installmentPeriodView.setText(""+installmentPeriod);
                     }
                 } catch (JSONException e) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(SelesaiPesananActivity.this);
@@ -220,6 +213,10 @@ public class SelesaiPesananActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(SelesaiPesananActivity.this);
                     builder.setMessage("Order not canceled!").create().show();
+                } finally {
+                    Intent intent = new Intent(SelesaiPesananActivity.this, MainActivity.class);
+                    intent.putExtra("user_id", currentUserId);
+                    startActivity(intent);
                 }
             }
         };
@@ -245,6 +242,10 @@ public class SelesaiPesananActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(SelesaiPesananActivity.this);
                     builder.setMessage("Order not finished!").create().show();
+                } finally {
+                    Intent intent = new Intent(SelesaiPesananActivity.this, MainActivity.class);
+                    intent.putExtra("user_id", currentUserId);
+                    startActivity(intent);
                 }
             }
         };

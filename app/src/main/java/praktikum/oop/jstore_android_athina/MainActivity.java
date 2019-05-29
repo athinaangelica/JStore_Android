@@ -90,14 +90,25 @@ public class MainActivity extends AppCompatActivity {
                         Location location1 = new Location(location.getString("city"), location.getString("province"), location.getString("description"));
                         //Toast.makeText(MainActivity.this, location1.getCity(), Toast.LENGTH_SHORT).show();
 
-                        listSupplier.add(new Supplier(
+                        Supplier iSupplier = new Supplier(
                                 supplier.getInt("id"),
                                 supplier.getString("name"),
                                 supplier.getString("email"),
                                 supplier.getString("phoneNumber"),
                                 location1
-                                )
                         );
+
+                        boolean supplierExists = false;
+
+                        for (Supplier suppliers : listSupplier){
+                            if(suppliers.getId() == supplier.getInt("id")) {
+                                supplierExists = true;
+                            }
+                        }
+
+                        if (!supplierExists) {
+                            listSupplier.add(iSupplier);
+                        }
 
                         listItem.add(new Item(
                                 item.getInt("id"),
@@ -105,14 +116,25 @@ public class MainActivity extends AppCompatActivity {
                                 item.getInt("price"),
                                 item.getString("category"),
                                 item.getString("status"),
-                                listSupplier.get(i)
+                                iSupplier
                                 )
                         );
                     }
 
                     for (int i = 0; i < listSupplier.size(); i++) {
-                        childMapping.put(listSupplier.get(i), listItem);
+                        ArrayList<Item> sItems = new ArrayList<>();
+
+                        for (Item items : listItem){
+                            if (items.getSupplier().getId() == listSupplier.get(i).getId()){
+                                sItems.add(items);
+                            }
+                        }
+                        childMapping.put(listSupplier.get(i), sItems);
                     }
+
+                    MainListAdapter listAdapter = new MainListAdapter(MainActivity.this, listSupplier, childMapping);
+                    expandableListView.setAdapter(listAdapter);
+
                 } catch (JSONException e) {
                     Toast.makeText(MainActivity.this, "Fetch Data Failed!", Toast.LENGTH_SHORT).show();
                 }
@@ -126,10 +148,10 @@ public class MainActivity extends AppCompatActivity {
 
 //        ExpandableListView expandableListView = (ExpandableListView) findViewById(R.id.expandable_list);
 
-        Toast.makeText(this, "Welcome!", Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, "Please wait while retrieving data", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Welcome!", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Please wait while retrieving data", Toast.LENGTH_SHORT).show();
 
-        MainListAdapter listAdapter = new MainListAdapter(MainActivity.this, listSupplier, childMapping);
-        expandableListView.setAdapter(listAdapter);
+//        MainListAdapter listAdapter = new MainListAdapter(MainActivity.this, listSupplier, childMapping);
+//        expandableListView.setAdapter(listAdapter);
     }
 }

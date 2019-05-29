@@ -2,7 +2,7 @@
     <string name="app_name">JStore</string>
     <!--<string name="ip_address">10.10.53.44</string>-->
     <!--<string name="ip_address">192.168.43.77></string>-->
-    <!--<string name="ip_address">192.168.200.4</string>-->
-    <string name="ip_address">10.0.2.2</string>
+    <string name="ip_address">192.168.200.182</string>
+    <!--<string name="ip_address">10.0.2.2</string>-->
 
 </resources>

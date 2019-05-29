@@ -142,7 +142,7 @@ public class BuatPesananActivity extends AppCompatActivity {
                 }
                 else {
                     invoiceStatus = InvoiceStatus.INSTALLMENT;
-                    buatPesananRequest = new BuatPesananRequest(itemId, currentUserId, invoiceStatus, installmentPeriodInput.getText().toString(), responseListener);
+                    buatPesananRequest = new BuatPesananRequest(itemId, currentUserId, invoiceStatus, installmentPeriodInput.getText().toString(), getResources().getString(R.string.ip_address), responseListener);
                 }
 
                 RequestQueue queue = Volley.newRequestQueue(BuatPesananActivity.this);
